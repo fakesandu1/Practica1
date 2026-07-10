@@ -2,6 +2,7 @@ import mysql.connector
 import log_in as log
 import csv
 
+
 cnx=mysql.connector.connect(user=log.user,password=log.password,
                             host="127.0.0.1",database="Practica")
 cursor=cnx.cursor()
@@ -73,7 +74,6 @@ class database:
         cnx.commit()
 
 
-
 data=database() # scoate datele din baza de date
 
 logdata=database() # va citi si stoca fisierul csv
@@ -82,9 +82,6 @@ logdata.reading()
 
 data.input_s()
 data.input_p()
-
-for i in range(len(data.sensory)):
-    print(data.sensory[i],"\n")
 
 cursor.close()
 cnx.close()
