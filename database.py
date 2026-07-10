@@ -62,7 +62,7 @@ class database:
             cnx.commit()
         query="insert into sensory(id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) values (%s,%s,%s,%s,%s,%s,%s,%s)"
         id=0
-        for i in range(1,len(self.meas)-1):
+        for i in range(1,len(self.meas)):
             query1="select distinct id_fisier from piesa where nume_fisier=%s"
             cursor.execute(query1,(self.fisier[i],))
             for(id_fisier) in cursor:

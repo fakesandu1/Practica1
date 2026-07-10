@@ -20,6 +20,15 @@ class error_detection:
         self.minus_tols = np.array(self.minus_tols)
         self.meas = np.array(self.meas)
         self.dev = np.array(self.dev)
+    def deviations(self):
+        negative_idx =np.where(self.dev<0)
+        positive_idx = np.where(self.dev > 0)
+        outside = np.append(np.where(np.abs(self.dev[negative_idx]) >= self.minus_tols[negative_idx]),
+                            np.where(self.dev[positive_idx] >= self.plus_tols[positive_idx]))
+        print(outside)
+        for i in outside:
+            print(db.data.sensory[i])
+
 
 test=error_detection()
-print(test.minus_tols)
+test.deviations()
