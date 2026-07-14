@@ -1,8 +1,7 @@
-from pandas.core.interchange import column
-
 import database as db
 import numpy as np
 import customtkinter
+from CTkTable import *
 
 
 class error_detection:
@@ -32,35 +31,29 @@ class error_detection:
         outside=np.where(self.outtol != 0)
         outside=np.append(outside,outside)
         maindata=[]
-        print(outside)
         for i in outside:
-            #print(db.data.sensory[i])
             maindata.append(db.data.sensory[i])
         maindata=np.array(maindata)
         self.maindata=np.append(self.maindata,maindata)
-        print(self.maindata)
+        self.maindata=np.reshape(self.maindata,maindata.shape)
 
 
 
 class App(customtkinter.CTk):
     def __init__(self):
+        eroare = error_detection()
+        eroare.deviations()
+        values=list(eroare.maindata)
+        values.insert(0,['id','fisier_id','cod','nom','+tol','-tol','meas','dev','outtol'])
+        print(values)
+
         super().__init__()
         self.geometry("1080×768")
 
+        self.table=CTkTable(master=self,row=len(eroare.maindata),column=len(eroare.maindata[0]),values=values)
+        self.table.pack(expand=False, fill="both")
 
-        self.textbox = customtkinter.CTkTextbox(master=self,width=1080,height=768,corner_radius=0)
-        self.textbox.grid(row=0,column=0,sticky="nsew")
-        self.textbox.insert("0.0","test")
 
-        self.button=customtkinter.CTkButton(self,text="test",command=self.button_callback)
-        self.button.grid(row=0,column=0,padx=5,pady=5)
-
-    def button_callback(self):
-        eroare = error_detection()
-        eroare.deviations()
-
-        for i in range(0,len(eroare.maindata)):
-            self.textbox.insert("0.0","%s\n"%eroare.maindata)
 
 if __name__=="__main__":
 
