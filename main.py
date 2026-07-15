@@ -1,3 +1,5 @@
+from traits.trait_types import true
+
 import database as db
 import numpy as np
 import customtkinter
@@ -39,20 +41,28 @@ class error_detection:
 
 
 
-class App(customtkinter.CTk):
-    def __init__(self):
+class MyFrame(customtkinter.CTkFrame):
+    def __init__(self,master,**kwargs):
+        super().__init__(master,**kwargs)
         eroare = error_detection()
         eroare.deviations()
-        values=list(eroare.maindata)
-        values.insert(0,['id','fisier_id','cod','nom','+tol','-tol','meas','dev','outtol'])
+        values = list(eroare.maindata)
+        values.insert(0, ['id', 'fisier_id', 'cod', 'nom', '+tol', '-tol', 'meas', 'dev', 'outtol'])
         print(values)
 
-        super().__init__()
-        self.geometry("1080×768")
 
-        self.table=CTkTable(master=self,row=len(eroare.maindata),column=len(eroare.maindata[0]),values=values)
+        self.table = CTkTable(master=self, row=len(eroare.maindata), column=len(eroare.maindata[0]), values=values)
         self.table.pack(expand=False, fill="both")
 
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+        self.geometry("1080×768")
+        self.grid_rowconfigure(0, weight=1)  # configure grid system
+        self.grid_columnconfigure(0, weight=1)
+
+        self.my_frame = MyFrame(master=self)
+        self.my_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
 
 if __name__=="__main__":

@@ -1,6 +1,12 @@
+import pdb
+from math import nan
+
 import mysql.connector
 import log_in as log
-import csv
+import pandas as pd
+import glob
+import numpy as np
+
 
 
 cnx=mysql.connector.connect(user=log.user,password=log.password,
@@ -41,21 +47,29 @@ class database:
         for( id,id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) in cursor:
             self.sensory.append([id,id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol])
     def reading(self):
-        with open("rezultate_metrologie_sigur.csv", "r") as f:
-            data = csv.reader(f)
-            for row in data:
-                self.fisier.append(row[0])
-                self.cod.append(row[2])
-                self.nominal.append(row[4])
-                self.plustol.append(row[5])
-                self.minustol.append(row[6])
-                self.meas.append(row[7])
-                self.dev.append(row[8])
-                self.outtol.append(row[9])
+        path="/home/vali/Documents/Coding_projects/Python/Practica/CSV/"
+        all_files=glob.glob(path+"*.csv")
+        sensory=[]
+        for filename in all_files:
+            df=pd.read_csv(filename,index_col=None,header=0)
+            sensory.append(df)
+        df=pd.concat(sensory,axis=0,ignore_index=True)
+        df=df.values.tolist()
+
+        for i in range(0,len(df)):
+            self.fisier.append(df[i][0])
+            self.cod.append(df[i][2])
+            self.nominal.append(df[i][4])
+            self.plustol.append(df[i][5])
+            self.minustol.append(df[i][6])
+            self.meas.append(df[i][7])
+            self.dev.append(df[i][8])
+            self.outtol.append(df[i][9])
+
     def db_insert(self):
         query = "insert into piesa(nume_fisier) value(%s)"
         set_fisiere = set(self.fisier)
-        set_fisiere.remove("﻿Fisier")
+        #set_fisiere.remove("﻿Fisier")
         fisiere = list(set_fisiere)
         for i in range(1,len(fisiere)-1):
             cursor.execute(query,(fisiere[i],))
@@ -69,7 +83,7 @@ class database:
                 id=id_fisier
                 id=id[0]
             print(f"Values being inserted: id={id}, cod={self.cod[i]}, nominal={self.nominal[i]}, plustol={self.plustol[i]}, minustol={self.minustol[i]}, meas={self.meas[i]}, dev={self.dev[i]}, outtol={self.outtol[i]}")
-            print(f"Types: {type(self.minustol[i])}")
+            print(f"Types: {type(self.nominal[i])}")
             cursor.execute(query,(id,self.cod[i],self.nominal[i],self.plustol[i],self.minustol[i],self.meas[i],self.dev[i],self.outtol[i]))
         cnx.commit()
 
