@@ -1,13 +1,7 @@
-import pdb
-from math import nan
-
 import mysql.connector
 import log_in as log
 import pandas as pd
 import glob
-import numpy as np
-
-
 
 cnx=mysql.connector.connect(user=log.user,password=log.password,
                             host="127.0.0.1",database="Practica")
@@ -65,7 +59,6 @@ class database:
             self.meas.append(df[i][7])
             self.dev.append(df[i][8])
             self.outtol.append(df[i][9])
-
     def db_insert(self):
         query = "insert into piesa(nume_fisier) value(%s)"
         set_fisiere = set(self.fisier)
