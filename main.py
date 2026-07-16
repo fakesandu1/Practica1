@@ -50,6 +50,13 @@ class Table_Frame(customtkinter.CTkScrollableFrame):
 
         self.table = CTkTable(master=self, row=len(values), column=len(values[0]), values=self.values)
         self.table.pack(expand=True, fill="both")
+    def Clear_table(self):
+        value_index=[]
+        for i in range(0,len(self.values[0])):
+            value_index.append(i)
+        print(value_index)
+        self.table.delete_columns(value_index)
+        self.table.add_row(['id', 'fisier_id', 'cod', 'nom', '+tol', '-tol', 'meas', 'dev', 'outtol'],0)
 
 
 
@@ -62,26 +69,6 @@ class EntryBox(customtkinter.CTkFrame):
 
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Search")
         self.entry.pack(expand=True, fill="both")
-
-        self.button=customtkinter.CTkButton(self,text="Search",command=self.button_press)
-        self.button.pack(expand=True, fill="both")
-
-        self.table_frame = Table_Frame(master=self, values=values)
-
-        self.search=''
-    def button_press(self):
-        self.search=self.entry.get()
-        print("the search is=",self.search)
-        search=np.where(self.values==self.search)
-        print(search)
-        if(len(search[0])==0):
-            for i in range(0, len(self.values)):
-                self.table_frame.table.add_row(self.values[i], i + 1)
-                print(self.values[i])
-        else:
-            for i in search[0]:
-                self.table_frame.table.add_row(self.values[i], i + 1)
-                print(self.values[i])
 
 
 class App(customtkinter.CTk):
@@ -96,7 +83,30 @@ class App(customtkinter.CTk):
         self.entry_frame.grid(row=0, column=0, padx=10, pady=30, sticky="ew")
 
         self.table_frame = Table_Frame(master=self,values=values,height=750)
-        self.table_frame.grid(row=1, column=0, padx=10, pady=30, sticky="nsew")
+        self.table_frame.grid(row=2, column=0, padx=10, pady=30, sticky="nsew")
+
+
+        self.button = customtkinter.CTkButton(self, text="Search", command=self.button_press)
+        self.button.grid(row=1, column=0, padx=10, pady=30, sticky="ew")
+
+        self.table_frame = Table_Frame(master=self, values=values)
+
+        self.search = ''
+
+    def button_press(self):
+        self.search = self.entry_frame.entry.get()
+        print("the search is=", self.search)
+        search = np.where(self.values == self.search)
+        print(search)
+        self.table_frame.Clear_table()
+        if (len(search[0]) == 0):
+            for i in range(0, len(self.values)):
+                self.table_frame.table.add_row(self.values[i], i + 1)
+                print(self.values[i])
+        else:
+            for i in search[0]:
+                self.table_frame.table.add_row(self.values[i], i + 1)
+                print(self.values[i])
 
 
 
