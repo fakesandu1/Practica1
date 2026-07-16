@@ -1,5 +1,3 @@
-from PIL.ImageOps import expand
-
 import database as db
 import numpy as np
 import customtkinter

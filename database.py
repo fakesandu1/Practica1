@@ -43,7 +43,7 @@ class database:
         for( id,nume_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) in cursor:
             self.sensory.append([id,nume_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol])
     def reading(self):
-        path="/home/vali/Documents/Coding_projects/Python/Practica/CSV/"
+        path="CSV/"
         all_files=glob.glob(path+"*.csv")
         sensory=[]
         for filename in all_files:
