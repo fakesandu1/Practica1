@@ -10,6 +10,7 @@ cursor=cnx.cursor()
 class database:
     piese=[]
     sensory=[]
+    PartName=[]
     fisier=[]
     cod=[]
     nominal=[]
@@ -23,6 +24,7 @@ class database:
         self.instrument=[]
         self.sensory=[]
         self.fisier = []
+        self.PartName=[]
         self.cod=[]
         self.nominal=[]
         self.plustol = []
@@ -31,15 +33,15 @@ class database:
         self.dev = []
         self.outtol = []
     def input_p(self):
-        query= "select id_fisier,nume_fisier from piesa"
+        query= "select id_fisier,nume_fisier,PartName from piesa"
         cursor.execute(query)
-        for(id_fisier,nume_fisier) in cursor:
-            self.piese.append([id_fisier,nume_fisier])
+        for(id_fisier,nume_fisier,PartName) in cursor:
+            self.piese.append([id_fisier,nume_fisier,PartName])
     def input_s(self):
-        query="select id,id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol from sensory"
+        query="select id,nume_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol from sensory join piesa on sensory.id_fisier=piesa.id_fisier;"
         cursor.execute(query)
-        for( id,id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) in cursor:
-            self.sensory.append([id,id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol])
+        for( id,nume_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) in cursor:
+            self.sensory.append([id,nume_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol])
     def reading(self):
         path="/home/vali/Documents/Coding_projects/Python/Practica/CSV/"
         all_files=glob.glob(path+"*.csv")
@@ -51,23 +53,29 @@ class database:
         df=df.values.tolist()
 
         for i in range(0,len(df)):
-            self.fisier.append(df[i][0])
-            self.cod.append(df[i][2])
-            self.nominal.append(df[i][4])
-            self.plustol.append(df[i][5])
-            self.minustol.append(df[i][6])
-            self.meas.append(df[i][7])
-            self.dev.append(df[i][8])
-            self.outtol.append(df[i][9])
+            self.PartName.append(df[i][0])
+            self.fisier.append(df[i][1])
+            self.cod.append(df[i][3])
+            self.nominal.append(df[i][5])
+            self.plustol.append(df[i][6])
+            self.minustol.append(df[i][7])
+            self.meas.append(df[i][8])
+            self.dev.append(df[i][9])
+            self.outtol.append(df[i][10])
+        for i in range(0,len(self.cod)):
+            if pd.isna(self.cod[i]):
+                self.cod[i]='nimic'
+            if pd.isna(self.PartName[i]):
+                self.PartName[i]='nimic'
     def db_insert(self):
-        query = "insert into piesa(nume_fisier) value(%s)"
+        query = "insert into piesa(nume_fisier,PartName) value(%s,%s)"
         set_fisiere = set(self.fisier)
-        #set_fisiere.remove("﻿Fisier")
         fisiere = list(set_fisiere)
         for i in range(1,len(fisiere)-1):
-            cursor.execute(query,(fisiere[i],))
+            cursor.execute(query,(fisiere[i],self.PartName[i]))
             cnx.commit()
         query="insert into sensory(id_fisier,cod,nom,plus_tol,minus_tol,meas,dev,outtol) values (%s,%s,%s,%s,%s,%s,%s,%s)"
+
         id=0
         for i in range(1,len(self.meas)):
             query1="select distinct id_fisier from piesa where nume_fisier=%s"

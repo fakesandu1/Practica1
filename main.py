@@ -1,3 +1,5 @@
+from PIL.ImageOps import expand
+
 import database as db
 import numpy as np
 import customtkinter
@@ -40,7 +42,6 @@ class error_detection:
             self.maindata=np.reshape(self.maindata,maindata.shape)
 
 
-
 class Table_Frame(customtkinter.CTkScrollableFrame):
     def __init__(self,master,values,**kwargs):
         super().__init__(master,**kwargs)
@@ -70,6 +71,30 @@ class EntryBox(customtkinter.CTkFrame):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Search")
         self.entry.pack(expand=True, fill="both")
 
+        self.button = customtkinter.CTkButton(self, text="Search", command=self.button_press)
+        self.button.pack(expand=True,fill="both")
+
+        self.label=customtkinter.CTkLabel(self, text="Search Result", fg_color="transparent")
+        self.label.pack(expand=True,fill="both")
+
+        self.search = ''
+
+    def button_press(self):
+        self.search = self.entry.get()
+        print("the search is=", self.search)
+        search = np.where(self.values == self.search)
+        print(search)
+        search_result=''
+        if len(search[0]) == 0:
+            self.label.configure(text="no search result")
+            print("no results")
+        else:
+            for i in search[0]:
+                search_result+="   ".join(self.values[i])+'\n'
+                print(self.values[i])
+            print(search_result)
+            self.label.configure(text=search_result)
+
 
 class App(customtkinter.CTk):
     def __init__(self,values):
@@ -86,27 +111,7 @@ class App(customtkinter.CTk):
         self.table_frame.grid(row=2, column=0, padx=10, pady=30, sticky="nsew")
 
 
-        self.button = customtkinter.CTkButton(self, text="Search", command=self.button_press)
-        self.button.grid(row=1, column=0, padx=10, pady=30, sticky="ew")
 
-        self.table_frame = Table_Frame(master=self, values=values)
-
-        self.search = ''
-
-    def button_press(self):
-        self.search = self.entry_frame.entry.get()
-        print("the search is=", self.search)
-        search = np.where(self.values == self.search)
-        print(search)
-        self.table_frame.Clear_table()
-        if (len(search[0]) == 0):
-            for i in range(0, len(self.values)):
-                self.table_frame.table.add_row(self.values[i], i + 1)
-                print(self.values[i])
-        else:
-            for i in search[0]:
-                self.table_frame.table.add_row(self.values[i], i + 1)
-                print(self.values[i])
 
 
 
