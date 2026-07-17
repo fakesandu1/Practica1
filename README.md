@@ -2,7 +2,7 @@ Rolul principal al apicatiei este de a citi un set de CSV-uri si de a:
 1. Le introduce pe acestea intr-o baza de date,
 2. care mai apoi sunt extrase si puse intr-un GUI unde se poate face un search pe detalile dorite
 
-pt mai mute detali/modificari vizitati:
+pt mai mute detali/modificari vizitati:https://github.com/fakesandu1/Practica1
 
 Introducerea ori citirea din baza de Date:
 Baza de date este una de Mysql sub forma

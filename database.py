@@ -68,6 +68,14 @@ class database:
             if pd.isna(self.PartName[i]):
                 self.PartName[i]='nimic'
     def db_insert(self):
+        #eliberarea bazei de date pt a permite inserarea datelor
+        #this is a hacky way of avoiding duplicats in the eventuality the same file is ran over and over again
+        #future people that work on this pls update this to be a proper file check and not this
+        query="delete from sensory;"
+        cursor.execute(query)
+        query="delete from piesa;"
+        cursor.execute(query)
+
         query = "insert into piesa(nume_fisier,PartName) value(%s,%s)"
         set_fisiere = set(self.fisier)
         fisiere = list(set_fisiere)
@@ -93,7 +101,7 @@ data=database() # scoate datele din baza de date
 
 logdata=database() # va citi si stoca fisierul csv
 logdata.reading()
-#logdata.db_insert() #inserarea in baza de date
+logdata.db_insert() #inserarea in baza de date
 
 data.input_s()
 data.input_p()
