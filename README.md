@@ -13,7 +13,6 @@ create table if not exists piesa(
     PartName varchar(1000)
 );
 
-
 create table if not exists sensory(
     id int primary key auto_increment,
     id_fisier int,

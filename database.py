@@ -103,6 +103,7 @@ logdata=database() # va citi si stoca fisierul csv
 logdata.reading()
 logdata.db_insert() #inserarea in baza de date
 
+
 data.input_s()
 data.input_p()
 
