@@ -116,4 +116,5 @@ if __name__=="__main__":
 
 
     app=App(values)
+    app.title("CSV Reader")
     app.mainloop()
