@@ -47,7 +47,7 @@ class database:
         all_files=glob.glob(path+"*.csv")
         sensory=[]
         for filename in all_files:
-            df=pd.read_csv(filename,index_col=None,header=0)
+            df=pd.read_csv(filename,index_col=None,header=0,delimiter=";")
             sensory.append(df)
         df=pd.concat(sensory,axis=0,ignore_index=True)
         df=df.values.tolist()

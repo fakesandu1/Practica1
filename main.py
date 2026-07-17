@@ -109,10 +109,6 @@ class App(customtkinter.CTk):
         self.table_frame.grid(row=2, column=0, padx=10, pady=30, sticky="nsew")
 
 
-
-
-
-
 if __name__=="__main__":
     erroare=error_detection()
     erroare.deviations()
